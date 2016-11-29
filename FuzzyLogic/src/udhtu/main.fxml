@@ -1,0 +1,49 @@
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<GridPane fx:controller="udhtu.Controller"
+          xmlns:fx="http://javafx.com/fxml"
+          alignment="center"
+          hgap="10"
+          vgap="10">
+    <padding>
+        <Insets
+                top="25"
+                right="25"
+                bottom="25"
+                left="25"/>
+    </padding>
+
+    <!--<Button-->
+            <!--GridPane.columnIndex="1"-->
+            <!--GridPane.rowIndex="1"-->
+            <!--text="Предварительная обработка данных"-->
+            <!--onAction="#handlePreProcessButtonAction"/>-->
+
+    <Button
+            GridPane.columnIndex="1"
+            GridPane.rowIndex="2"
+            text="Кластеризация"
+            onAction="#handleClusterizationButtonAction"/>
+
+    <!--<Button-->
+            <!--GridPane.columnIndex="1"-->
+            <!--GridPane.rowIndex="3"-->
+            <!--text="Построение функций принадлежности"-->
+            <!--onAction="#handleBuildFunctionButtonAction"/>-->
+
+    <Button
+            GridPane.columnIndex="1"
+            GridPane.rowIndex="4"
+            text="База знаний"
+            onAction="#handleKnowledgeDataBaseButtonAction"/>
+
+    <Button
+            GridPane.columnIndex="1"
+            GridPane.rowIndex="5"
+            text="Нечеткий вывод"
+            onAction="#handleFuzzyConclusionButtonAction"/>
+
+</GridPane>
