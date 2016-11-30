@@ -7,34 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Controller {
-/*
 
-    private List<FourDPoint> mPoints = null;
-
-    private Cluster mFirstCluster = null;
-    private Cluster mSecondCluster = null;
-    private Cluster mThirdCluster = null;
-    private Cluster mFourthCluster = null;
-    private Cluster mFifthCluster = null;
-
-    {
-        FourDPoint mFirstClusterCenter = new FourDPoint(650.649, 0.09328, 1.97124381131862, 1.750765);
-        FourDPoint mSecondClusterCenter = new FourDPoint(1397.501585, 0.01864, 1.61047294666799, 1.36944);
-        FourDPoint mThirdClusterCenter = new FourDPoint(1393.32114, 0.018235, 3.76288498923412, 1.72609);
-        FourDPoint mForthClusterCenter = new FourDPoint(637.63775, 0.08201, 1.42657056078442, 0.802075);
-        FourDPoint mFifthClusterCenter = new FourDPoint(768.95933, 0.05381, 4.38246714493812, 1.10315);
-
-        mFirstCluster = new Cluster(mFirstClusterCenter);
-        mSecondCluster = new Cluster(mSecondClusterCenter);
-        mThirdCluster = new Cluster(mThirdClusterCenter);
-        mFourthCluster = new Cluster(mForthClusterCenter);
-        mFifthCluster = new Cluster(mFifthClusterCenter);
-
-    }
-*/
     public void handlePreProcessButtonAction(ActionEvent actionEvent) {
 
-        //mPoints.forEach(System.out::println);
+
     }
 
     private List<double[]> firstCluster = new ArrayList<>();
@@ -44,7 +20,7 @@ public class Controller {
     private List<double[]> fifthCluster = new ArrayList<>();
 
     public void handleClusterizationButtonAction(ActionEvent actionEvent) {
-        double[][] samples = ExcelParser.parse1();
+        double[][] samples = ExcelParser.parse();
         double[][] original = new double[samples.length][4];
         for (int i = 0; i < samples.length; i++) {
             double[] copy = new double[4];
@@ -56,14 +32,7 @@ public class Controller {
         }
 
 
-
-        //System.arraycopy(samples, 0, original, 0, samples.length);
-
-        //System.out.println(original.length);
-
-      //  System.out.println(Arrays.deepToString(samples));
         double[][] minMax = scale(samples);
-      //  System.out.println(Arrays.deepToString(samples));
         int coordinatesCount = 4;
         int clusterCount = 5;
         double norma = 0.9;
@@ -75,9 +44,6 @@ public class Controller {
                 weightMatrix[j][i] = wMin + norma * (wMax -wMin);
             }
         }
-//        for (int i = 0; i < weightMatrix.length; i++) {
-//            System.out.println(Arrays.toString(weightMatrix[i]));
-//        }
 
         double kf = 1.0;
 
