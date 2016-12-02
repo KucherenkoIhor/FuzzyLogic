@@ -1,9 +1,9 @@
 package udhtu;
 
 import javafx.event.ActionEvent;
+import udhtu.fuzzy.SigmaVariableGenerator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Controller {
@@ -111,6 +111,15 @@ public class Controller {
             }
         }
 
+        //функции принадлежности
+        double[] firstClusterAColumn = new double[firstCluster.size()];
+        for (int i = 0; i < firstCluster.size(); i++) {
+            firstClusterAColumn[i] = firstCluster.get(i)[0];
+        }
+        SigmaVariableGenerator.generate(firstClusterAColumn);
+
+
+/*
         System.out.println("Первый кластер");
         System.out.println("Образцов: " + firstCluster.size());
         firstCluster.forEach(item -> {
@@ -144,6 +153,7 @@ public class Controller {
         fifthCluster.forEach(item -> {
             System.out.println(Arrays.toString(item));
         });
+*/
 
     }
 

@@ -14,6 +14,13 @@ import java.util.List;
  */
 public class ExcelParser {
 
+    //0 - A
+    //7 - H
+    //4 - E
+
+    //5 - F
+
+
     public static double[][] parse() {
         List<double[]> list = new ArrayList<>();
         try {
