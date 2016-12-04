@@ -1,7 +1,7 @@
 package udhtu;
 
 import javafx.event.ActionEvent;
-import udhtu.fuzzy.SigmaVariableGenerator;
+import udhtu.fuzzy.LinguistikVar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +116,115 @@ public class Controller {
         for (int i = 0; i < firstCluster.size(); i++) {
             firstClusterAColumn[i] = firstCluster.get(i)[0];
         }
-        SigmaVariableGenerator.generate(firstClusterAColumn);
+        LinguistikVar firstClusterAVar = new LinguistikVar(firstClusterAColumn);
+        double[] firstClusterEColumn = new double[firstCluster.size()];
+        for (int i = 0; i < firstCluster.size(); i++) {
+            firstClusterEColumn[i] = firstCluster.get(i)[1];
+        }
+        LinguistikVar firstClusterEVar = new LinguistikVar(firstClusterEColumn);
+        double[] firstClusterFColumn = new double[firstCluster.size()];
+        for (int i = 0; i < firstCluster.size(); i++) {
+            firstClusterFColumn[i] = firstCluster.get(i)[2];
+        }
+        LinguistikVar firstClusterFVar = new LinguistikVar(firstClusterFColumn);
+        double[] firstClusterHColumn = new double[firstCluster.size()];
+        for (int i = 0; i < firstCluster.size(); i++) {
+            firstClusterHColumn[i] = firstCluster.get(i)[3];
+        }
+        LinguistikVar firstClusterHVar = new LinguistikVar(firstClusterHColumn);
+
+        //2
+        double[] secondClusterAColumn = new double[secondCluster.size()];
+        for (int i = 0; i < secondCluster.size(); i++) {
+            secondClusterAColumn[i] = secondCluster.get(i)[0];
+        }
+        LinguistikVar secondClusterAVar = new LinguistikVar(secondClusterAColumn);
+        double[] secondClusterEColumn = new double[secondCluster.size()];
+        for (int i = 0; i < secondCluster.size(); i++) {
+            secondClusterEColumn[i] = secondCluster.get(i)[1];
+        }
+        LinguistikVar secondClusterEVar = new LinguistikVar(secondClusterEColumn);
+        double[] secondClusterFColumn = new double[secondCluster.size()];
+        for (int i = 0; i < secondCluster.size(); i++) {
+            secondClusterFColumn[i] = secondCluster.get(i)[2];
+        }
+        LinguistikVar secondClusterFVar = new LinguistikVar(secondClusterFColumn);
+        double[] secondClusterHColumn = new double[secondCluster.size()];
+        for (int i = 0; i < secondCluster.size(); i++) {
+            secondClusterHColumn[i] = secondCluster.get(i)[3];
+        }
+        LinguistikVar secondClusterHVar = new LinguistikVar(secondClusterHColumn);
+
+
+        //3
+        double[] thirdClusterAColumn = new double[thirdCluster.size()];
+        for (int i = 0; i < thirdCluster.size(); i++) {
+            thirdClusterAColumn[i] = thirdCluster.get(i)[0];
+        }
+        LinguistikVar thirdClusterAVar = new LinguistikVar(thirdClusterAColumn);
+        double[] thirdClusterEColumn = new double[thirdCluster.size()];
+        for (int i = 0; i < thirdCluster.size(); i++) {
+            thirdClusterEColumn[i] = thirdCluster.get(i)[1];
+        }
+        LinguistikVar thirdClusterEVar = new LinguistikVar(thirdClusterEColumn);
+        double[] thirdClusterFColumn = new double[thirdCluster.size()];
+        for (int i = 0; i < thirdCluster.size(); i++) {
+            thirdClusterFColumn[i] = thirdCluster.get(i)[2];
+        }
+        LinguistikVar thirdClusterFVar = new LinguistikVar(thirdClusterFColumn);
+        double[] thirdClusterHColumn = new double[thirdCluster.size()];
+        for (int i = 0; i < thirdCluster.size(); i++) {
+            thirdClusterHColumn[i] = thirdCluster.get(i)[3];
+        }
+        LinguistikVar thirdClusterHVar = new LinguistikVar(thirdClusterHColumn);
+
+
+        //4
+        double[] fourthClusterAColumn = new double[fourthCluster.size()];
+        for (int i = 0; i < fourthCluster.size(); i++) {
+            fourthClusterAColumn[i] = fourthCluster.get(i)[0];
+        }
+        LinguistikVar fourthClusterAVar = new LinguistikVar(fourthClusterAColumn);
+        double[] fourthClusterEColumn = new double[fourthCluster.size()];
+        for (int i = 0; i < fourthCluster.size(); i++) {
+            fourthClusterEColumn[i] = fourthCluster.get(i)[1];
+        }
+        LinguistikVar fourthClusterEVar = new LinguistikVar(fourthClusterEColumn);
+        double[] fourthClusterFColumn = new double[fourthCluster.size()];
+        for (int i = 0; i < fourthCluster.size(); i++) {
+            fourthClusterFColumn[i] = fourthCluster.get(i)[2];
+        }
+        LinguistikVar fourthClusterFVar = new LinguistikVar(fourthClusterFColumn);
+        double[] fourthClusterHColumn = new double[fourthCluster.size()];
+        for (int i = 0; i < fourthCluster.size(); i++) {
+            fourthClusterHColumn[i] = fourthCluster.get(i)[3];
+        }
+        LinguistikVar fourthClusterHVar = new LinguistikVar(fourthClusterHColumn);
+
+        //5
+        double[] fifthClusterAColumn = new double[fifthCluster.size()];
+        for (int i = 0; i < fifthCluster.size(); i++) {
+            fifthClusterAColumn[i] = fifthCluster.get(i)[0];
+        }
+        LinguistikVar fifthClusterAVar = new LinguistikVar(fifthClusterAColumn);
+        double[] fifthClusterEColumn = new double[fifthCluster.size()];
+        for (int i = 0; i < fifthCluster.size(); i++) {
+            fifthClusterEColumn[i] = fifthCluster.get(i)[1];
+        }
+        LinguistikVar fifthClusterEVar = new LinguistikVar(fifthClusterEColumn);
+        double[] fifthClusterFColumn = new double[fifthCluster.size()];
+        for (int i = 0; i < fifthCluster.size(); i++) {
+            fifthClusterFColumn[i] = fifthCluster.get(i)[2];
+        }
+        LinguistikVar fifthClusterFVar = new LinguistikVar(fifthClusterFColumn);
+        double[] fifthClusterHColumn = new double[fifthCluster.size()];
+        for (int i = 0; i < fifthCluster.size(); i++) {
+            fifthClusterHColumn[i] = fifthCluster.get(i)[3];
+        }
+        LinguistikVar fifthClusterHVar = new LinguistikVar(fifthClusterHColumn);
+
+
+        //   SigmaVariableGenerator.generate(firstClusterAColumn);
 
 
 /*
