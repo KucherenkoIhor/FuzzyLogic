@@ -9,6 +9,9 @@ public class LinguistikVar {
 
     public final double [] column;
 
+    public final double ks [] = new double[2];
+
+    public final double bs [] = new double[2];
 
     public LinguistikVar(double[] column) {
         this.column = column;
@@ -44,15 +47,30 @@ public class LinguistikVar {
         }
 
 
-        for (int i = 0; i < frequency.length; i++) {
+       /* for (int i = 0; i < frequency.length; i++) {
             System.out.println(frequency[i]);
-        }
+        }*/
 
         System.out.println();
 
+        double prevMu = 0.0;
         for (int i = 0; i < normalizeFrequency.length; i++) {
-            System.out.println(normalizeFrequency[i]);
+            System.out.println(normalizeFrequency[i] + " ||| " + edgesOfIntervals[i]);
+
+
+            if(ks[0] == 0.0) {
+                if (normalizeFrequency[i] == 1.0) {
+                    ks[0] = (normalizeFrequency[i] - normalizeFrequency[0]) / (edgesOfIntervals[i] - edgesOfIntervals[0]);
+                    bs[0] = normalizeFrequency[0] - ((edgesOfIntervals[i]*(normalizeFrequency[i] - normalizeFrequency[0]))/ (edgesOfIntervals[i] - edgesOfIntervals[0]));
+                }
+            }
+
         }
+
+        System.out.println("k: " + ks[0]);
+        System.out.println("b: " + bs[0]);
+
+        System.out.println();
 
 
     }
