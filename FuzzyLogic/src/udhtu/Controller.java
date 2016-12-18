@@ -1,8 +1,13 @@
 package udhtu;
 
 import javafx.event.ActionEvent;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
 import udhtu.fuzzy.LinguistikVar;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +25,63 @@ public class Controller {
     private List<double[]> fifthCluster = new ArrayList<>();
 
     public void handleClusterizationButtonAction(ActionEvent actionEvent) {
-        double[][] samples = ExcelParser.parse();
+
+        List<double[]> firstCluster = getFirstCluster();
+        //функции принадлежности
+        double[] firstClusterAColumn = new double[firstCluster.size()];
+        for (int i = 0; i < firstCluster.size(); i++) {
+            firstClusterAColumn[i] = firstCluster.get(i)[0];
+        }
+        LinguistikVar firstClusterAVar = new LinguistikVar(firstClusterAColumn);
+
+        double[] firstClusterEColumn = new double[firstCluster.size()];
+        for (int i = 0; i < firstCluster.size(); i++) {
+            firstClusterEColumn[i] = firstCluster.get(i)[1];
+        }
+        LinguistikVar firstClusterEVar = new LinguistikVar(firstClusterEColumn);
+
+        double[] firstClusterFColumn = new double[firstCluster.size()];
+        for (int i = 0; i < firstCluster.size(); i++) {
+            firstClusterFColumn[i] = firstCluster.get(i)[2];
+        }
+        LinguistikVar firstClusterFVar = new LinguistikVar(firstClusterFColumn);
+        double[] firstClusterHColumn = new double[firstCluster.size()];
+        for (int i = 0; i < firstCluster.size(); i++) {
+            firstClusterHColumn[i] = firstCluster.get(i)[3];
+        }
+        LinguistikVar firstClusterHVar = new LinguistikVar(firstClusterHColumn);
+
+
+        double aValue = 582.03391;
+        double eValue = 0.08678;
+        double fValue = 1.50268;
+
+       // boolean isBelongToFirstCluster =
+       //         firstClusterAVar.isValueBelongToThis(aValue)
+       //                 && firstClusterEVar.isValueBelongToThis(eValue)
+       //                 && firstClusterFVar.isValueBelongToThis(fValue);
+
+        //System.out.println(isBelongToFirstCluster);
+
+       // if(isBelongToFirstCluster) {
+            double aK = firstClusterAVar.getK(aValue);
+            double eK = firstClusterEVar.getK(eValue);
+            double fK = firstClusterFVar.getK(fValue);
+
+            double aB = firstClusterAVar.getB(aValue);
+            double eB = firstClusterEVar.getB(eValue);
+            double fB = firstClusterFVar.getB(fValue);
+
+            double muA = aK * aValue + aB;
+            double muE = eK * eValue + eB;
+            double muF = fK * fValue + fB;
+
+            double minMu = minFromArray(new double[]{muA, muE, muF});
+            System.out.println("1 кластер мин мю " + minMu);
+//        }
+
+
+        /*double[][] samples = ExcelParser.parse();
         double[][] original = new double[samples.length][4];
         for (int i = 0; i < samples.length; i++) {
             double[] copy = new double[4];
@@ -31,39 +92,42 @@ public class Controller {
             original[i] = copy;
         }
 
+        scale(samples);
 
-        double[][] minMax = scale(samples);
+       /// System.out.println(Arrays.deepToString(samples));
+
         int coordinatesCount = 4;
         int clusterCount = 5;
-        double norma = 0.9;
-        double wMin = 0.09;
-        double wMax = 0.6;
+        //double norma = 0.5;
+        double wMin = -0.5;
+        double wMax = 0.5;
         double [][] weightMatrix = new double[clusterCount][coordinatesCount];
         for (int i = 0; i < coordinatesCount; i++) {
             for (int j = 0; j < clusterCount; j++) {
-                weightMatrix[j][i] = wMin + norma * (wMax -wMin);
+                double norma = 2.7 + (Math.random() * (3.14 - 2.7));
+                weightMatrix[j][i] = wMin + norma * (wMax - wMin);
             }
         }
 
-        double kf = 1.0;
+
+        double kf = 0.5;
 
         int [] nObr = new int[samples.length];
 
         while(kf >= 0.1) {
 
-            double[] distance = new double[clusterCount];
             for (int i = 0; i < samples.length; i++) {
                 //1. Извлечение образца из матрицы образцов
                 double[] sample = samples[i];
 
                 //2. Цикл по номерам кластеров
+                double[] distance = new double[clusterCount];
                 for (int j = 0; j < clusterCount; j++) {
                     distance[j] = 0.0;
                     //2.1. Вычисление меры приближения
                     for (int k = 0; k < coordinatesCount; k++) {
                         distance[j] = distance[j] + Math.pow((sample[k] - weightMatrix[j][k]), 2);
                     }
-
                 }
 
                 //2.2. Определение номера кластера
@@ -89,40 +153,76 @@ public class Controller {
         for (int i = 0; i < nObr.length; i++) {
             switch (nObr[i]) {
                 case 0: {
-                    firstCluster.add(original[i]);
+         //           firstCluster.add(original[i]);
                     break;
                 }
                 case 1: {
-                    secondCluster.add(original[i]);
+      //              secondCluster.add(original[i]);
                     break;
                 }
                 case 2: {
-                    thirdCluster.add(original[i]);
+      //              thirdCluster.add(original[i]);
                     break;
                 }
                 case 3: {
-                    fourthCluster.add(original[i]);
+    //                fourthCluster.add(original[i]);
                     break;
                 }
                 case 4: {
-                    fifthCluster.add(original[i]);
+      ///              fifthCluster.add(original[i]);
                     break;
                 }
             }
         }
 
-        //функции принадлежности
+        firstCluster.forEach(item ->  {
+            System.out.println(item[0]);
+        });
+
+      /*  System.out.println(firstCluster.size());
+        System.out.println(secondCluster.size());
+        System.out.println(thirdCluster.size());
+        System.out.println(fourthCluster.size());
+        System.out.println(fifthCluster.size());*/
+
+
+
+/*        //функции принадлежности
         double[] firstClusterAColumn = new double[firstCluster.size()];
         for (int i = 0; i < firstCluster.size(); i++) {
             firstClusterAColumn[i] = firstCluster.get(i)[0];
         }
         LinguistikVar firstClusterAVar = new LinguistikVar(firstClusterAColumn);
-        double[] firstClusterEColumn = new double[firstCluster.size()];
+
+
+       /* for(int i = 0; i < firstClusterAVar.normalizeFrequency.length; i ++) {
+            System.out.println(String.valueOf(firstClusterAVar.normalizeFrequency[i]).replace(".", ","));
+        }*/
+
+
+  /*      double[] firstClusterEColumn = new double[firstCluster.size()];
         for (int i = 0; i < firstCluster.size(); i++) {
             firstClusterEColumn[i] = firstCluster.get(i)[1];
         }
         LinguistikVar firstClusterEVar = new LinguistikVar(firstClusterEColumn);
-        double[] firstClusterFColumn = new double[firstCluster.size()];
+
+
+       /* for(int i = 0; i < firstClusterEVar.normalizeFrequency.length; i ++) {
+            System.out.println(String.valueOf(firstClusterEVar.normalizeFrequency[i]).replace(".", ","));
+        }
+
+        firstClusterEVar.terms.forEach( term -> {
+            System.out.println(
+                    "left: " + term.leftValue
+                            + " top: " + term.topValue
+                            + " right: " + term.rightValue
+                            + " leftK: " + term.getLeftK()
+                            + " leftB: " + term.getLeftB()
+                            + " rightK: " + term.getRightK()
+                            + " rightB: " + term.getRightB());
+        });*/
+
+     /*   double[] firstClusterFColumn = new double[firstCluster.size()];
         for (int i = 0; i < firstCluster.size(); i++) {
             firstClusterFColumn[i] = firstCluster.get(i)[2];
         }
@@ -133,8 +233,40 @@ public class Controller {
         }
         LinguistikVar firstClusterHVar = new LinguistikVar(firstClusterHColumn);
 
+
+      /*  final int[] g = {1};
+        firstClusterAVar.terms.forEach(item -> {
+            System.out.println("первая переменная  " + " терм: " + g[0] + " mu left: " + item.left + " value left: " + item.leftValue + " mu top: " + item.top + " value top: " + item.topValue + " mu right: " + item.right + " value right: " + item.rightValue + " k: " + item.getLeftK() + " b: " + item.getLeftB());
+            g[0]++;
+        });
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        g[0] = 1;
+        firstClusterEVar.terms.forEach(item -> {
+            System.out.println("вторая переменная  " + " терм: " + g[0] + " mu left: " + item.left + " value left: " + item.leftValue + " mu top: " + item.top + " value top: " + item.topValue + " mu right: " + item.right + " value right: " + item.rightValue + " k: " + item.getLeftK() + " b: " + item.getLeftB());
+            g[0]++;
+        });
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        g[0] = 1;
+        firstClusterFVar.terms.forEach(item -> {
+            System.out.println("третья переменная  " + " терм: " + g[0] + " mu left: " + item.left + " value left: " + item.leftValue + " mu top: " + item.top + " value top: " + item.topValue + " mu right: " + item.right + " value right: " + item.rightValue + " k: " + item.getLeftK() + " b: " + item.getLeftB());
+            g[0]++;
+        });
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        g[0] = 1;
+        firstClusterHVar.terms.forEach(item -> {
+            System.out.println("четвертая переменная  " + " терм: " + g[0] + " mu left: " + item.left + " value left: " + item.leftValue + " mu top: " + item.top + " value top: " + item.topValue + " mu right: " + item.right + " value right: " + item.rightValue + " k: " + item.getLeftK() + " b: " + item.getLeftB());
+            g[0]++;
+        });*/
+
+
         //2
-        double[] secondClusterAColumn = new double[secondCluster.size()];
+       /* double[] secondClusterAColumn = new double[secondCluster.size()];
         for (int i = 0; i < secondCluster.size(); i++) {
             secondClusterAColumn[i] = secondCluster.get(i)[0];
         }
@@ -224,6 +356,128 @@ public class Controller {
         LinguistikVar fifthClusterHVar = new LinguistikVar(fifthClusterHColumn);
 
 
+       // System.out.println(Arrays.toString(firstCluster.get(0)));
+        //[1250.68344, 0.02224, 1.88261, 3.7255654803350113]
+
+        double aValue = 1250.68344;
+        double eValue = 0.02224;
+        double fValue = 1.88261;
+
+        boolean isBelongToFirstCluster =
+                        firstClusterAVar.isValueBelongToThis(aValue)
+                        && firstClusterEVar.isValueBelongToThis(eValue)
+                        && firstClusterFVar.isValueBelongToThis(fValue);
+
+        boolean isBelongToSecondCluster =
+                secondClusterAVar.isValueBelongToThis(aValue)
+                        && secondClusterEVar.isValueBelongToThis(eValue)
+                        && secondClusterFVar.isValueBelongToThis(fValue);
+
+        boolean isBelongToThirdCluster =
+                thirdClusterAVar.isValueBelongToThis(aValue)
+                        && thirdClusterEVar.isValueBelongToThis(eValue)
+                        && thirdClusterFVar.isValueBelongToThis(fValue);
+
+        boolean isBelongToFourthCluster =
+                fourthClusterAVar.isValueBelongToThis(aValue)
+                        && fourthClusterEVar.isValueBelongToThis(eValue)
+                        && fourthClusterFVar.isValueBelongToThis(fValue);
+
+        boolean isBelongToFifthCluster =
+                fifthClusterAVar.isValueBelongToThis(aValue)
+                        && fifthClusterEVar.isValueBelongToThis(eValue)
+                        && fifthClusterFVar.isValueBelongToThis(fValue);
+
+
+        /*System.out.println(isBelongToFirstCluster);
+        System.out.println(isBelongToSecondCluster);
+        System.out.println(isBelongToThirdCluster);
+        System.out.println(isBelongToFourthCluster);
+        System.out.println(isBelongToFifthCluster);*/
+
+        /*if(isBelongToFirstCluster) {
+            double aK = firstClusterAVar.getK(aValue);
+            double eK = firstClusterEVar.getK(eValue);
+            double fK = firstClusterFVar.getK(fValue);
+
+            double aB = firstClusterAVar.getB(aValue);
+            double eB = firstClusterEVar.getB(eValue);
+            double fB = firstClusterFVar.getB(fValue);
+
+            double muA = aK * aValue + aB;
+            double muE = eK * eValue + eB;
+            double muF = fK * fValue + fB;
+
+            double minMu = minFromArray(new double[]{muA, muE, muF});
+            System.out.println("1 кластер мин мю " + minMu);
+        } else if(isBelongToSecondCluster) {
+            double aK = secondClusterAVar.getK(aValue);
+            double eK = secondClusterEVar.getK(eValue);
+            double fK = secondClusterFVar.getK(fValue);
+
+            double aB = secondClusterAVar.getB(aValue);
+            double eB = secondClusterEVar.getB(eValue);
+            double fB = secondClusterFVar.getB(fValue);
+
+            double muA = aK * aValue + aB;
+            double muE = eK * eValue + eB;
+            double muF = fK * fValue + fB;
+
+            double minMu = minFromArray(new double[]{muA, muE, muF});
+  //          System.out.println("2 кластер мин мю " + minMu);
+
+        } else if(isBelongToThirdCluster) {
+            double aK = thirdClusterAVar.getK(aValue);
+            double eK = thirdClusterEVar.getK(eValue);
+            double fK = thirdClusterFVar.getK(fValue);
+
+            double aB = thirdClusterAVar.getB(aValue);
+            double eB = thirdClusterEVar.getB(eValue);
+            double fB = thirdClusterFVar.getB(fValue);
+
+            double muA = aK * aValue + aB;
+            double muE = eK * eValue + eB;
+            double muF = fK * fValue + fB;
+
+            double minMu = minFromArray(new double[]{muA, muE, muF});
+    //        System.out.println("3 кластер мин мю " + minMu);
+        } else if(isBelongToFourthCluster) {
+            double aK = fourthClusterAVar.getK(aValue);
+            double eK = fourthClusterEVar.getK(eValue);
+            double fK = fourthClusterFVar.getK(fValue);
+
+            double aB = fourthClusterAVar.getB(aValue);
+            double eB = fourthClusterEVar.getB(eValue);
+            double fB = fourthClusterFVar.getB(fValue);
+
+            double muA = aK * aValue + aB;
+            double muE = eK * eValue + eB;
+            double muF = fK * fValue + fB;
+
+            double minMu = maxFromArray(new double[]{muA, muE, muF});
+    //        System.out.println("4 кластер мин мю " + minMu);
+        } else if(isBelongToFifthCluster) {
+            double aK = fifthClusterAVar.getK(aValue);
+            double eK = fifthClusterEVar.getK(eValue);
+            double fK = fifthClusterFVar.getK(fValue);
+
+            double aB = fifthClusterAVar.getB(aValue);
+            double eB = fifthClusterEVar.getB(eValue);
+            double fB = fifthClusterFVar.getB(fValue);
+
+            double muA = aK * aValue + aB;
+            double muE = eK * eValue + eB;
+            double muF = fK * fValue + fB;
+
+            double minMu = minFromArray(new double[]{muA, muE, muF});
+     //       System.out.println("5 кластер мин мю " + minMu);
+        }
+
+        //firstClusterAVar.isValueBelongToThis()
+
+
+
+
         //   SigmaVariableGenerator.generate(firstClusterAColumn);
 
 
@@ -269,6 +523,40 @@ public class Controller {
 
     }
 
+    public List<double[]> getFirstCluster() {
+        return getCluster(3, 43);
+    }
+
+    public List<double[]> getCluster(int sheetIndex, int rowCount) {
+        List<double[]> list = new ArrayList<>();
+        try {
+            FileInputStream file = new FileInputStream(new File("/home/igor/Загрузки/2.xls"));
+            HSSFWorkbook workbook = new HSSFWorkbook(file);
+            HSSFSheet sheet = workbook.getSheetAt(sheetIndex);
+            for(int i = 0; i < rowCount; i ++) {
+                Row row = sheet.getRow(i);
+                double [] sample = new double[4];
+                sample[0] = row.getCell(0).getNumericCellValue();
+                sample[1] = row.getCell(4).getNumericCellValue();
+                sample[2] = row.getCell(5).getNumericCellValue();
+                sample[3] = row.getCell(7).getNumericCellValue();
+                if(sample[0] <= 1500
+                        && sample[0] > 0
+                        && sample[1] > 0
+                        && sample[1] <= 5
+                        && sample[2] > 0
+                        && sample[2] <= 5
+                        && sample[3] > 0
+                        && sample[3] <= 5) {
+                    list.add(sample);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public void handleKnowledgeDataBaseButtonAction(ActionEvent actionEvent) {
 
     }
@@ -280,6 +568,16 @@ public class Controller {
     private double minFromArray(double[] array) {
         double min = array[0];
         for (int i = 1; i < array.length; i++) {
+            if(array[i] > min) {
+                min = array[i];
+            }
+        }
+        return min;
+    }
+
+    private double maxFromArray(double[] array) {
+        double min = array[0];
+        for (int i = 1; i < array.length; i++) {
             if(array[i] < min) {
                 min = array[i];
             }
@@ -287,7 +585,7 @@ public class Controller {
         return min;
     }
 
-    private double [][] scale(double [][] samples) {
+    private void scale(double [][] samples) {
         double [][] minMaxMatrix = new double[4][2];
         for (int i = 0; i < minMaxMatrix.length; i++) {
             minMaxMatrix[i][0] = findMinFromColumn(samples, i);
@@ -298,7 +596,6 @@ public class Controller {
                 samples[i][j] = (samples[i][j] - minMaxMatrix[j][0]) / (minMaxMatrix[j][1] - minMaxMatrix[j][0]);
             }
         }
-        return minMaxMatrix;
     }
 
     private double findMinFromColumn(double [][] samples, int column) {

@@ -11,24 +11,29 @@ public class LinguistikVar {
 
     public final double [] column;
 
-    public final double ks [] = new double[2];
+    public final double min;
 
-    public final double bs [] = new double[2];
+    public final double max;
+
+    public static final int COLUMNS_FROM_GRAPH = 20;
+
+    public final double[] edgesOfIntervals = new double[COLUMNS_FROM_GRAPH];
+
+    public final int[] frequency = new int[COLUMNS_FROM_GRAPH];
+
+    public final double normalizeFrequency [] = new double[frequency.length];
 
     public LinguistikVar(double[] column) {
         this.column = column;
 
         Arrays.sort(column);
-        double min = column[0];
-        double max = column[column.length - 1];
-        int columnsFromGraph = 10;
+        min = column[0];
+        max = column[column.length - 1];
 
-        double[] edgesOfIntervals = new double[columnsFromGraph];
-        for (int i = 1, j = 0; i <= columnsFromGraph; i ++, j ++) {
-            edgesOfIntervals[j] = min + ((max - min) / columnsFromGraph) * i;
+        for (int i = 1, j = 0; i <= COLUMNS_FROM_GRAPH; i ++, j ++) {
+            edgesOfIntervals[j] = min + ((max - min) / COLUMNS_FROM_GRAPH) * i;
         }
 
-        int[] frequency = new int[columnsFromGraph];
         double prevEnd = 0;
 
         for (int i = 0; i < frequency.length; i++) {
@@ -42,8 +47,6 @@ public class LinguistikVar {
         int minFrequency = min(frequency);
         int maxFrequency = max(frequency);
 
-        double normalizeFrequency [] = new double[frequency.length];
-
         for (int i = 0; i < normalizeFrequency.length; i++) {
             normalizeFrequency[i] = (((double)frequency[i]) - ((double)minFrequency)) / (((double)maxFrequency) - ((double)minFrequency));
         }
@@ -53,12 +56,12 @@ public class LinguistikVar {
             System.out.println(frequency[i]);
         }*/
 
-        System.out.println();
+       // System.out.println();
 
         int indexOfFirstTop = 0;
         int indexOfSecondTop = 0;
         double top1 = normalizeFrequency[indexOfFirstTop];
-        double top2 = normalizeFrequency[indexOfSecondTop];
+        double top2 = -1;
         for (int i = 0; i < normalizeFrequency.length; i++) {
             if(top1 < normalizeFrequency[i]) {
                 top1 = normalizeFrequency[i];
@@ -67,13 +70,15 @@ public class LinguistikVar {
         }
         for (int i = 0; i < normalizeFrequency.length; i++) {
             if(i == indexOfFirstTop) continue;
+            if(top2 == -1) {
+                top2 = normalizeFrequency[i];
+                continue;
+            }
             if(top2 < normalizeFrequency[i]) {
                 top2 = normalizeFrequency[i];
                 indexOfSecondTop = i;
             }
         }
-        System.out.println("top1: " + top1);
-        System.out.println("top2: " + top2);
         int indexOfLow1 = -1;
         int indexOfLow2 = -1;
         double low1 = 1;
@@ -106,100 +111,137 @@ public class LinguistikVar {
 
         if(!isTwoTerms) {
             Term term = new Term();
-            term.left = normalizeFrequency[0];
+            //term.left = normalizeFrequency[0];
             term.leftValue = edgesOfIntervals[0];
-            term.right = normalizeFrequency[normalizeFrequency.length - 1];
+            //term.right = normalizeFrequency[normalizeFrequency.length - 1];
             term.rightValue = edgesOfIntervals[normalizeFrequency.length - 1];
-            term.top = top1;
+            //term.top = top1;
             term.topValue = edgesOfIntervals[indexOfFirstTop];
+            if(indexOfFirstTop == 0) {
+                term.leftValue = 0;
+            }
             terms.add(term);
         } else {
             if(indexOfFirstTop < indexOfSecondTop) {
                 Term term1 = new Term();
-                term1.left = normalizeFrequency[0];
+                ///term1.left = normalizeFrequency[0];
                 term1.leftValue = edgesOfIntervals[0];
-                term1.right = normalizeFrequency[indexOfLow1];
+                //term1.right = normalizeFrequency[indexOfLow1];
                 term1.rightValue = edgesOfIntervals[indexOfLow1];
-                term1.top = top1;
+                //term1.top = top1;
                 term1.topValue = edgesOfIntervals[indexOfFirstTop];
 
+                if(indexOfFirstTop == 0) {
+                    term1.leftValue = 0;
+                }
+
                 Term term2 = new Term();
-                term2.left = normalizeFrequency[indexOfLow1];
+                //term2.left = normalizeFrequency[indexOfLow1];
                 term2.leftValue = edgesOfIntervals[indexOfLow1];
-                term2.right = normalizeFrequency[normalizeFrequency.length - 1];
+                //term2.right = normalizeFrequency[normalizeFrequency.length - 1];
                 term2.rightValue = edgesOfIntervals[normalizeFrequency.length - 1];
-                term2.top = top2;
+                //term2.top = top2;
                 term2.topValue = edgesOfIntervals[indexOfSecondTop];
+
                 terms.add(term1);
                 terms.add(term2);
             } else {
                 Term term1 = new Term();
-                term1.left = normalizeFrequency[0];
+                //term1.left = normalizeFrequency[0];
                 term1.leftValue = edgesOfIntervals[0];
-                term1.right = normalizeFrequency[indexOfLow2];
+               // term1.right = normalizeFrequency[indexOfLow2];
                 term1.rightValue = edgesOfIntervals[indexOfLow2];
-                term1.top = top2;
+               /// term1.top = top2;
                 term1.topValue = edgesOfIntervals[indexOfSecondTop];
 
+                if(indexOfSecondTop == 0) {
+                    term1.leftValue = 0;
+                }
+
                 Term term2 = new Term();
-                term2.left = normalizeFrequency[indexOfLow2];
+                ///term2.left = normalizeFrequency[indexOfLow2];
                 term2.leftValue = edgesOfIntervals[indexOfLow2];
-                term2.right = normalizeFrequency[normalizeFrequency.length - 1];
+                ///term2.right = normalizeFrequency[normalizeFrequency.length - 1];
                 term2.topValue = edgesOfIntervals[normalizeFrequency.length - 1];
-                term2.top = top1;
+                //term2.top = top1;
                 term2.topValue = edgesOfIntervals[indexOfFirstTop];
                 terms.add(term1);
                 terms.add(term2);
             }
         }
 
-        System.out.println("terms: ");
+       /* System.out.println();
+        terms.forEach( term -> {
+            System.out.println(
+                    "left: " + term.leftValue
+                            + " top: " + term.topValue
+                            + " right: " + term.rightValue
+                            + " leftK: " + term.getLeftK()
+                            + " leftB: " + term.getLeftB()
+                            + " rightK: " + term.getRightK()
+                            + " rightB: " + term.getRightB());
+        });
+        System.out.println();
+*/
+
+        //System.out.println("terms: ");
         terms.forEach(item -> {
-            System.out.println("left " + item.left + " top " + item.top + " right " + item.right + " k: " + item.getK() + " b: " + item.getB());
+          //  System.out.println("left " + item.left + " top " + item.top + " right " + item.right + " k: " + item.getLeftK() + " b: " + item.getLeftB());
         });
 
 
-       // System.out.println("low1: " + low1);
-       // System.out.println("low2: " + low2);
-
-
-
-
-       /* for (int i = 0; i < normalizeFrequency.length; i++) {
-            System.out.println(normalizeFrequency[i] + " ||| " + edgesOfIntervals[i]);
-            if(ks[0] == 0.0) {
-                if (normalizeFrequency[i] == 1.0) {
-                    ks[0] = (normalizeFrequency[i] - normalizeFrequency[0]) / (edgesOfIntervals[i] - edgesOfIntervals[0]);
-                    bs[0] = normalizeFrequency[0] - ((edgesOfIntervals[i]*(normalizeFrequency[i] - normalizeFrequency[0]))/ (edgesOfIntervals[i] - edgesOfIntervals[0]));
-                }
-            }
-        }
-
-        System.out.println("k: " + ks[0]);
-        System.out.println("b: " + bs[0]);**/
-
-        System.out.println();
+       // System.out.println();
 
 
     }
 
-    public List<Term> terms = new ArrayList<>();
+    public double getK(double value) {
+        for(Term item: terms) {
+            if(item.leftValue < value && value < item.rightValue) {
+                return item.getLeftK();
+            }
+        }
+        return -100;
+    }
+
+    public double getB(double value) {
+        for(Term item: terms) {
+            if(item.leftValue < value && value < item.rightValue) {
+                return item.getLeftB();
+            }
+        }
+        return -100;
+    }
+
+    public boolean isValueBelongToThis(double value) {
+        return value > min && value < max;
+    }
+
+    public final List<Term> terms = new ArrayList<>();
 
     public class Term {
 
-        double left;
-        double leftValue;
-        double top;
-        double topValue;
-        double right;
-        double rightValue;
+        public double left = 0;
+        public double leftValue;
+        public double top = 1;
+        public double topValue;
+        public double right = 0;
+        public double rightValue;
 
-        public double getK() {
+        public double getLeftK() {
             return (top - left) / (topValue - leftValue);
         }
 
-        public double getB() {
-            return left - ((topValue*(top - left))/ (topValue - leftValue));
+        public double getLeftB() {
+            return left - ((leftValue*(top - left))/ (topValue - leftValue));
+        }
+
+        public double getRightK() {
+            return (top - right) / (topValue - rightValue);
+        }
+
+        public double getRightB() {
+            return top -((rightValue * (top - right)) / (topValue - rightValue));
         }
 
     }
