@@ -115,7 +115,7 @@ public class LinguistikVar {
             term.leftValue = edgesOfIntervals[0];
             //term.right = normalizeFrequency[normalizeFrequency.length - 1];
             term.rightValue = edgesOfIntervals[normalizeFrequency.length - 1];
-            //term.top = top1;
+           // term.top = top1;
             term.topValue = edgesOfIntervals[indexOfFirstTop];
             if(indexOfFirstTop == 0) {
                 term.leftValue = 0;
@@ -124,7 +124,7 @@ public class LinguistikVar {
         } else {
             if(indexOfFirstTop < indexOfSecondTop) {
                 Term term1 = new Term();
-                ///term1.left = normalizeFrequency[0];
+                //term1.left = normalizeFrequency[0];
                 term1.leftValue = edgesOfIntervals[0];
                 //term1.right = normalizeFrequency[indexOfLow1];
                 term1.rightValue = edgesOfIntervals[indexOfLow1];
@@ -149,7 +149,7 @@ public class LinguistikVar {
                 Term term1 = new Term();
                 //term1.left = normalizeFrequency[0];
                 term1.leftValue = edgesOfIntervals[0];
-               // term1.right = normalizeFrequency[indexOfLow2];
+                //term1.right = normalizeFrequency[indexOfLow2];
                 term1.rightValue = edgesOfIntervals[indexOfLow2];
                /// term1.top = top2;
                 term1.topValue = edgesOfIntervals[indexOfSecondTop];
@@ -159,11 +159,11 @@ public class LinguistikVar {
                 }
 
                 Term term2 = new Term();
-                ///term2.left = normalizeFrequency[indexOfLow2];
+                //term2.left = normalizeFrequency[indexOfLow2];
                 term2.leftValue = edgesOfIntervals[indexOfLow2];
-                ///term2.right = normalizeFrequency[normalizeFrequency.length - 1];
-                term2.topValue = edgesOfIntervals[normalizeFrequency.length - 1];
-                //term2.top = top1;
+               // term2.right = normalizeFrequency[normalizeFrequency.length - 1];
+                term2.rightValue = edgesOfIntervals[normalizeFrequency.length - 1];
+               // term2.top = top1;
                 term2.topValue = edgesOfIntervals[indexOfFirstTop];
                 terms.add(term1);
                 terms.add(term2);
@@ -198,7 +198,11 @@ public class LinguistikVar {
     public double getK(double value) {
         for(Term item: terms) {
             if(item.leftValue < value && value < item.rightValue) {
-                return item.getLeftK();
+                if(value < item.topValue) {
+                    return item.getLeftK();
+                } else {
+                    return item.getRightK();
+                }
             }
         }
         return -100;
@@ -207,7 +211,57 @@ public class LinguistikVar {
     public double getB(double value) {
         for(Term item: terms) {
             if(item.leftValue < value && value < item.rightValue) {
+                if(value < item.topValue) {
+                    return item.getLeftB();
+                } else {
+                    return item.getRightB();
+                }
+            }
+        }
+        return -100;
+    }
+
+    public Term getTerm(double value) {
+        for(Term item: terms) {
+            if(item.leftValue < value && value < item.rightValue) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public double getLeftK(double value) {
+        for(Term item: terms) {
+        //    System.out.println(item.leftValue + " " + item.rightValue);
+            if(item.leftValue < value && value < item.rightValue) {
+                return item.getLeftK();
+            }
+        }
+        return -100;
+    }
+
+    public double getLeftB(double value) {
+        for(Term item: terms) {
+            if(item.leftValue < value && value < item.rightValue) {
                 return item.getLeftB();
+            }
+        }
+        return -100;
+    }
+
+    public double getRightK(double value) {
+        for(Term item: terms) {
+            if(item.leftValue < value && value < item.rightValue) {
+                return item.getRightK();
+            }
+        }
+        return -100;
+    }
+
+    public double getRightB(double value) {
+        for(Term item: terms) {
+            if(item.leftValue < value && value < item.rightValue) {
+                return item.getRightB();
             }
         }
         return -100;
@@ -228,13 +282,15 @@ public class LinguistikVar {
         public double right = 0;
         public double rightValue;
 
+        //623.2 650.65
+
         public double getLeftK() {
             return (top - left) / (topValue - leftValue);
-        }
+        } // 1 / 27 = 0.029
 
         public double getLeftB() {
             return left - ((leftValue*(top - left))/ (topValue - leftValue));
-        }
+        }//-17.964
 
         public double getRightK() {
             return (top - right) / (topValue - rightValue);
@@ -242,6 +298,16 @@ public class LinguistikVar {
 
         public double getRightB() {
             return top -((rightValue * (top - right)) / (topValue - rightValue));
+        }
+
+        public double function(double x) {
+            if(leftValue == min && topValue == min && x < rightValue) return 1;
+
+            if(x <= leftValue) return 0;
+            if(leftValue <= x && x <= topValue) return ((x - leftValue) / (topValue - leftValue));
+            if(topValue <= x && x <= rightValue) return ((rightValue - x) / (rightValue - topValue));
+            if(rightValue <= x) return 0;
+            throw new IllegalArgumentException();
         }
 
     }
