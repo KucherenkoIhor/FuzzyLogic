@@ -556,7 +556,7 @@ public class Controller {
     public List<double[]> getCluster(int sheetIndex, int rowCount) {
         List<double[]> list = new ArrayList<>();
         try {
-            FileInputStream file = new FileInputStream(new File("/home/igor/Загрузки/2.xls"));
+            FileInputStream file = new FileInputStream(new File("2.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook(file);
             HSSFSheet sheet = workbook.getSheetAt(sheetIndex);
             for(int i = 0; i < rowCount; i ++) {
